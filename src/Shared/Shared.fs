@@ -12,10 +12,24 @@ module Todo =
         { Id = Guid.NewGuid()
           Description = description }
 
+type UsageUnit =
+    | KW
+    | BTU
+    | KGal
+
+type MonthlyUsage =
+    { Id: int
+      Year: int
+      Month: int
+      Usage: decimal
+      Unit: UsageUnit
+      Cost: decimal }
+
 module Route =
     let builder typeName methodName =
         sprintf "/api/%s/%s" typeName methodName
 
 type ITodosApi =
     { getTodos: unit -> Async<Todo list>
-      addTodo: Todo -> Async<Todo> }
+      addTodo: Todo -> Async<Todo>
+      getMonthlyUsages: unit -> Async<MonthlyUsage list>}
