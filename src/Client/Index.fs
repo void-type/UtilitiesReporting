@@ -7,10 +7,14 @@ open System
 
 type Model =
     { MonthlyUsages: MonthlyUsage list
-      UtilityType: string
+      UtilityType: UtilityType
       ErrorMessage: string }
 
-type Msg = GotMonthlyUsages of Result<MonthlyUsage list, string>
+type Msg =
+    | GetMonthlyUsages
+    | GotMonthlyUsages of Result<MonthlyUsage list, string>
+    | UtilityTypeChanged of UtilityType
+    | ErrorMsg of exn
 
 type MonthlyUsageForChart =
     { Id: int
@@ -26,7 +30,7 @@ let api =
 let init () : Model * Cmd<Msg> =
     let model =
         { MonthlyUsages = []
-          UtilityType = "electric"
+          UtilityType = Electric
           ErrorMessage = "" }
 
     let cmd =
@@ -36,6 +40,8 @@ let init () : Model * Cmd<Msg> =
 
 let update (msg: Msg) (model: Model) : Model * Cmd<Msg> =
     match msg with
+    | GetMonthlyUsages -> model, Cmd.OfAsync.either api.GetMonthlyUsages model.UtilityType GotMonthlyUsages ErrorMsg
+
     | GotMonthlyUsages usagesResult ->
         match usagesResult with
         | Ok usages ->
@@ -44,6 +50,10 @@ let update (msg: Msg) (model: Model) : Model * Cmd<Msg> =
                   ErrorMessage = "" },
             Cmd.none
         | Error e -> { model with ErrorMessage = e }, Cmd.none
+
+    | ErrorMsg e -> { model with ErrorMessage = e.Message }, Cmd.none
+
+    | UtilityTypeChanged value -> { model with UtilityType = value }, Cmd.ofMsg GetMonthlyUsages
 
 open Feliz
 open Feliz.Bulma
@@ -75,8 +85,7 @@ let usageGraphWidget (usages: MonthlyUsage list) (utilityType: string) =
                 ]
                 Recharts.yAxis [
                     yAxis.number
-                    UsageUnits.getFromUtilityType utilityType
-                    |> yAxis.unit
+                    UtilityType.getUnit utilityType |> yAxis.unit
                 ]
                 Recharts.tooltip []
                 Recharts.bar [
@@ -107,6 +116,15 @@ let view (model: Model) (dispatch: Msg -> unit) =
             color.isPrimary
             text.hasTextCentered
             prop.text "Utilities Reporting"
+        ]
+        Bulma.field.div [
+            Bulma.label "Utility type"
+            Bulma.control.p [
+                prop.onChange (UtilityTypeChanged >> dispatch)
+                prop.children [
+                    Bulma.select (UtilityType.getTypes |> List.map Html.option)
+                ]
+            ]
         ]
         if not (String.IsNullOrWhiteSpace(model.ErrorMessage)) then
             Bulma.notification [

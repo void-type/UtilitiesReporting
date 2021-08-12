@@ -11,10 +11,12 @@ let data = Storage()
 
 let api =
     { GetMonthlyUsages =
-          fun utilityType ->
+          fun utility ->
               async {
-                  match utilityType with
-                  | "electric" -> return data.GetElectricUsages()
+                  match utility with
+                  | Electric -> return data.GetElectricUsages()
+                  | Gas -> return data.GetGasUsages()
+                  | Water -> return data.GetWaterUsages()
                   | _ -> return Error "Invalid utility selection."
               } }
 

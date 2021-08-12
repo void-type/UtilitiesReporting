@@ -1,5 +1,7 @@
 namespace Shared
 
+open Microsoft.FSharp.Reflection
+
 type MonthlyUsage =
     { Id: int
       Year: int
@@ -7,24 +9,25 @@ type MonthlyUsage =
       Usage: decimal
       Cost: decimal }
 
+type UtilityType =
+    | Electric
+    | Gas
+    | Water
 
-module UsageUnits =
-    let usageTypes =
-        [ "electric", "KW"
-          "gas", "BTU"
-          "water", "KGal" ]
-        |> Map.ofList
+module UtilityType =
+    let getUnit utility =
+        match utility with
+        | Electric -> "kWh"
+        | Gas -> "CCF"
+        | Water -> "kGal"
 
-    let getFromUtilityType usageType =
-        let found = usageTypes.TryFind usageType
-
-        match found with
-        | Some x -> x
-        | None -> ""
+    let getTypes =
+        FSharpType.GetUnionCases(typeof<UtilityType>)
+        |> Seq.map (fun x -> x.Name)
 
 module Route =
     let builder typeName methodName =
         sprintf "/api/%s/%s" typeName methodName
 
 type IAppApi =
-    { GetMonthlyUsages: string -> Async<Result<MonthlyUsage list, string>> }
+    { GetMonthlyUsages: UtilityType -> Async<Result<MonthlyUsage list, string>> }
