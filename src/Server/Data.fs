@@ -90,6 +90,126 @@ type Storage() as this =
     do
         this.AddWaterUsage(
             { Id = 1
+              Year = 2020
+              Month = 2
+              Usage = 3m
+              Cost = 150m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 2
+              Year = 2020
+              Month = 3
+              Usage = 3m
+              Cost = 175m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 3
+              Year = 2020
+              Month = 4
+              Usage = 5m
+              Cost = 300m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 4
+              Year = 2020
+              Month = 5
+              Usage = 10m
+              Cost = 150m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 1
+              Year = 2020
+              Month = 6
+              Usage = 3m
+              Cost = 150m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 2
+              Year = 2020
+              Month = 7
+              Usage = 3m
+              Cost = 175m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 3
+              Year = 2020
+              Month = 8
+              Usage = 5m
+              Cost = 300m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 4
+              Year = 2020
+              Month = 9
+              Usage = 10m
+              Cost = 150m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 1
+              Year = 2020
+              Month = 10
+              Usage = 3m
+              Cost = 150m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 2
+              Year = 2020
+              Month = 11
+              Usage = 3m
+              Cost = 175m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 3
+              Year = 2020
+              Month = 12
+              Usage = 5m
+              Cost = 300m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 4
+              Year = 2021
+              Month = 1
+              Usage = 10m
+              Cost = 150m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 1
               Year = 2021
               Month = 2
               Usage = 3m
@@ -127,20 +247,91 @@ type Storage() as this =
         )
         |> ignore
 
-    member __.GetElectricUsages() = Ok (List.ofSeq electric)
+    do
+        this.AddWaterUsage(
+            { Id = 1
+              Year = 2021
+              Month = 6
+              Usage = 3m
+              Cost = 150m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 2
+              Year = 2021
+              Month = 7
+              Usage = 3m
+              Cost = 175m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 3
+              Year = 2021
+              Month = 8
+              Usage = 5m
+              Cost = 300m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 4
+              Year = 2021
+              Month = 9
+              Usage = 10m
+              Cost = 150m }
+        )
+        |> ignore
+
+    do
+        this.AddWaterUsage(
+            { Id = 1
+              Year = 2021
+              Month = 10
+              Usage = 3m
+              Cost = 150m }
+        )
+        |> ignore
+
+    member __.GetElectricUsages() =
+        try
+            Ok(List.ofSeq electric)
+        with
+        | _ -> Error "Error contacting database."
 
     member __.AddElectricUsage(usage: MonthlyUsage) =
-        electric.Add usage
-        Ok()
+        try
+            electric.Add usage
+            Ok()
+        with
+        | _ -> Error "Error contacting database."
 
-    member __.GetGasUsages() = Ok (List.ofSeq gas)
+    member __.GetGasUsages() =
+        try
+            Ok(List.ofSeq gas)
+        with
+        | _ -> Error "Error contacting database."
 
     member __.AddGasUsage(usage: MonthlyUsage) =
-        gas.Add usage
-        Ok()
+        try
+            gas.Add usage
+            Ok()
+        with
+        | _ -> Error "Error contacting database."
 
-    member __.GetWaterUsages() = Ok (List.ofSeq water)
+    member __.GetWaterUsages() =
+        try
+            Ok(List.ofSeq water)
+        with
+        | _ -> Error "Error contacting database."
 
     member __.AddWaterUsage(usage: MonthlyUsage) =
-        water.Add usage
-        Ok()
+        try
+            water.Add usage
+            Ok()
+        with
+        | _ -> Error "Error contacting database."

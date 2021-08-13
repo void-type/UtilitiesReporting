@@ -51,3 +51,6 @@ You will find more documentation about the used F# components at the following p
 * [Saturn](https://saturnframework.org/)
 * [Fable](https://fable.io/docs/)
 * [Elmish](https://elmish.github.io/elmish/)
+* [Html2Feliz](https://thisfunctionaltom.github.io/Html2Feliz/)
+* [Feliz](https://zaid-ajaj.github.io/Feliz)
+* [Feliz.Bulma](https://dzoukr.github.io/Feliz.Bulma)

@@ -17,7 +17,6 @@ let api =
                   | Electric -> return data.GetElectricUsages()
                   | Gas -> return data.GetGasUsages()
                   | Water -> return data.GetWaterUsages()
-                  | _ -> return Error "Invalid utility selection."
               } }
 
 let webApp =
